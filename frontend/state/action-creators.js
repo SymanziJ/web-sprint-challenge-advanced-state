@@ -24,7 +24,12 @@ export function selectAnswer(answer_id) {
   }
 }
 
-export function setMessage() { }
+export function setMessage(msg) {
+  return {
+    type: types.SET_INFO_MESSAGE,
+    payload: msg
+  }
+}
 
 export function setQuiz() { }
 
@@ -41,15 +46,30 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
     axios.get(url + 'next')
       .then(res => {
-        dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: res.data})
+        const newQuiz = res.data
+        dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: newQuiz})
       })
       .catch(err => {
         debugger
       })
   }
 }
-export function postAnswer() {
+export function postAnswer(answer) {
   return function (dispatch) {
+    axios.post(url + 'answer', answer)
+      .then(res => {
+        const message = res.data.message;
+        dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: null})
+        dispatch({ type: types.SET_INFO_MESSAGE, payload: message});
+        axios.get(url + 'next')
+          .then(res => {
+            const newQuiz = res.data
+            dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: newQuiz})
+          })
+          .catch(err => {
+            debugger
+          })
+        })
     // On successful POST:
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state

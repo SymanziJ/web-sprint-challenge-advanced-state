@@ -40,8 +40,18 @@ function selectedAnswer(answerState = initialSelectedAnswerState, action) {
 }
 
 const initialMessageState = ''
-function infoMessage(state = initialMessageState, action) {
-  return state
+function infoMessage(infoMessageState = initialMessageState, action) {
+  switch (action.type) {
+    case types.SET_SELECTED_ANSWER: {
+      return initialMessageState;
+    }
+    case types.SET_INFO_MESSAGE: {
+      const message = action.payload;
+      return message;
+    }
+    default:
+      return infoMessageState;
+  }
 }
 
 const initialFormState = {
