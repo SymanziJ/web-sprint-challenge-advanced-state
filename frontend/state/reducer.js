@@ -1,4 +1,3 @@
-// ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from 'redux'
 import * as types from './action-types'
 
