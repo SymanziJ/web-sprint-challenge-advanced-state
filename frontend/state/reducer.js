@@ -2,7 +2,6 @@
 import { combineReducers } from 'redux'
 import * as types from './action-types'
 
-
 const initialWheelState = 0
 function activeCog(wheelState = initialWheelState, action) {
   switch (action.type) {
@@ -35,8 +34,9 @@ function selectedAnswer(answerState = initialSelectedAnswerState, action) {
       const selectedAnswerId = action.payload;
       return selectedAnswerId;
     }
+    default:
+      return answerState;
   }
-  return answerState
 }
 
 const initialMessageState = ''
@@ -59,8 +59,17 @@ const initialFormState = {
   newTrueAnswer: '',
   newFalseAnswer: '',
 }
-function form(state = initialFormState, action) {
-  return state
+function form(formState = initialFormState, action) {
+  switch (action.type) {
+    case types.INPUT_CHANGE: {
+      const { id, value} = action.payload;
+      return { ...formState, [id]: value};
+    }
+    case types.RESET_FORM: {
+      return initialFormState;
+    }
+  }
+  return formState
 }
 
 export default combineReducers({ activeCog, quiz, selectedAnswer, infoMessage, form })

@@ -33,7 +33,12 @@ export function setMessage(msg) {
 
 export function setQuiz() { }
 
-export function inputChange() { }
+export function inputChange({id, value}) {
+  return {
+    type: types.INPUT_CHANGE,
+    payload: { id, value }
+  }
+}
 
 export function resetForm() { }
 
@@ -50,6 +55,7 @@ export function fetchQuiz() {
         dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: newQuiz})
       })
       .catch(err => {
+        dispatch({ type: types.SET_INFO_MESSAGE, payload: err.message})
         debugger
       })
   }
@@ -67,6 +73,7 @@ export function postAnswer(answer) {
             dispatch({ type: types.SET_QUIZ_INTO_STATE, payload: newQuiz})
           })
           .catch(err => {
+            dispatch({ type: types.SET_INFO_MESSAGE, payload: err.message})
             debugger
           })
         })
@@ -76,8 +83,17 @@ export function postAnswer(answer) {
     // - Dispatch the fetching of the next quiz
   }
 }
-export function postQuiz() {
+export function postQuiz(newQuiz, successMessage) {
   return function (dispatch) {
+    axios.post(url + 'new', newQuiz)
+      .then(res => {
+        dispatch({ type: types.SET_INFO_MESSAGE, payload: successMessage})
+        dispatch({ type: types.RESET_FORM})
+      })
+      .catch(err => {
+        dispatch({ type: types.SET_INFO_MESSAGE, payload: err.message})
+        debugger
+      })
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form
